@@ -15,23 +15,20 @@ import java_cup.runtime.*;
 
 /* reserved words */
 terminal DISPLAY, PUBLIC, STATIC, VOID, MAIN, CLASS, EXTENDS, NEW, THIS;
-terminal STRING, INT, DOUBLE, BOOLEAN, TRUE, FALSE, IF, ELSE, WHILE;
+terminal STRING, INT, BOOLEAN, TRUE, FALSE, IF, ELSE, WHILE;
 terminal RETURN, LENGTH, PRINT;
 
 /* operators */
-terminal GTHAN, LTHAN, DOT, EXCLAMATION;
-terminal LEQUAL, GEQUAL, EQUAL, AND, OR, FSLASH;
-terminal PLUS, BECOMES, MINUS, MULTI, DIFFERENT, PERCENT;
+terminal LTHAN, DOT, EXCLAMATION, AND, PLUS, BECOMES, MINUS, MULTI;
 
 /* delimiters */
-terminal LPAREN, RPAREN, SEMICOLON, LBRACKET, RBRACKET, LCURLYBRACE, RCURLYBRACE;
-terminal COMA, SEMICOL;
+terminal LPAREN, RPAREN, SEMICOLON, LBRACKET, RBRACKET, LCURLYBRACE, RCURLYBRACE, COMA;
 
 /* identifiers */
 terminal String IDENTIFIER;
 
 /* constants */
-terminal INTLITERAL, DOUBLELITERAL;
+terminal INTLITERAL;
 
 /* Nonterminals (constructed by parser): */
 

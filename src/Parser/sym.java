@@ -9,56 +9,45 @@ package Parser;
 public class sym {
   /* terminals */
   public static final int DISPLAY = 2;
-  public static final int LBRACKET = 42;
-  public static final int GEQUAL = 28;
-  public static final int DOUBLE = 13;
-  public static final int LPAREN = 39;
+  public static final int LBRACKET = 33;
+  public static final int LPAREN = 30;
   public static final int INT = 12;
-  public static final int FSLASH = 32;
-  public static final int MINUS = 35;
-  public static final int RPAREN = 40;
+  public static final int MINUS = 28;
   public static final int STATIC = 4;
-  public static final int SEMICOLON = 41;
-  public static final int AND = 30;
-  public static final int LTHAN = 24;
-  public static final int LCURLYBRACE = 44;
-  public static final int OR = 31;
-  public static final int SEMICOL = 47;
+  public static final int RPAREN = 31;
+  public static final int SEMICOLON = 32;
+  public static final int AND = 25;
+  public static final int LTHAN = 22;
+  public static final int LCURLYBRACE = 35;
   public static final int CLASS = 7;
-  public static final int DIFFERENT = 37;
-  public static final int PLUS = 33;
+  public static final int PLUS = 26;
   public static final int MAIN = 6;
-  public static final int IF = 17;
-  public static final int EXCLAMATION = 26;
+  public static final int IF = 16;
+  public static final int EXCLAMATION = 24;
   public static final int THIS = 10;
-  public static final int DOT = 25;
+  public static final int DOT = 23;
   public static final int EOF = 0;
-  public static final int BOOLEAN = 14;
-  public static final int RETURN = 20;
-  public static final int DOUBLELITERAL = 50;
-  public static final int RBRACKET = 43;
-  public static final int EQUAL = 29;
-  public static final int TRUE = 15;
+  public static final int BOOLEAN = 13;
+  public static final int RETURN = 19;
+  public static final int RBRACKET = 34;
+  public static final int TRUE = 14;
   public static final int NEW = 9;
   public static final int error = 1;
-  public static final int COMA = 46;
-  public static final int PERCENT = 38;
-  public static final int BECOMES = 34;
+  public static final int COMA = 37;
+  public static final int BECOMES = 27;
   public static final int VOID = 5;
-  public static final int INTLITERAL = 49;
-  public static final int GTHAN = 23;
-  public static final int ELSE = 18;
-  public static final int LEQUAL = 27;
-  public static final int WHILE = 19;
+  public static final int INTLITERAL = 39;
+  public static final int ELSE = 17;
+  public static final int WHILE = 18;
   public static final int PUBLIC = 3;
   public static final int EXTENDS = 8;
-  public static final int MULTI = 36;
+  public static final int MULTI = 29;
   public static final int STRING = 11;
-  public static final int FALSE = 16;
-  public static final int RCURLYBRACE = 45;
-  public static final int PRINT = 22;
-  public static final int LENGTH = 21;
-  public static final int IDENTIFIER = 48;
+  public static final int FALSE = 15;
+  public static final int RCURLYBRACE = 36;
+  public static final int PRINT = 21;
+  public static final int LENGTH = 20;
+  public static final int IDENTIFIER = 38;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -73,7 +62,6 @@ public class sym {
   "THIS",
   "STRING",
   "INT",
-  "DOUBLE",
   "BOOLEAN",
   "TRUE",
   "FALSE",
@@ -83,22 +71,14 @@ public class sym {
   "RETURN",
   "LENGTH",
   "PRINT",
-  "GTHAN",
   "LTHAN",
   "DOT",
   "EXCLAMATION",
-  "LEQUAL",
-  "GEQUAL",
-  "EQUAL",
   "AND",
-  "OR",
-  "FSLASH",
   "PLUS",
   "BECOMES",
   "MINUS",
   "MULTI",
-  "DIFFERENT",
-  "PERCENT",
   "LPAREN",
   "RPAREN",
   "SEMICOLON",
@@ -107,10 +87,8 @@ public class sym {
   "LCURLYBRACE",
   "RCURLYBRACE",
   "COMA",
-  "SEMICOL",
   "IDENTIFIER",
-  "INTLITERAL",
-  "DOUBLELITERAL"
+  "INTLITERAL"
   };
 }
 

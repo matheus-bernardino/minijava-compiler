@@ -1,35 +1,24 @@
-Warning : Scanner at 70(13): Unrecognized character '=' -- ignored
+Warning : Scanner at 67(13): Unrecognized character '=' -- ignored
 Warning : Terminal "LBRACKET" was declared but never used
-Warning : Terminal "GEQUAL" was declared but never used
-Warning : Terminal "DOUBLE" was declared but never used
 Warning : Terminal "INT" was declared but never used
-Warning : Terminal "FSLASH" was declared but never used
 Warning : Terminal "STATIC" was declared but never used
 Warning : Terminal "AND" was declared but never used
 Warning : Terminal "LTHAN" was declared but never used
 Warning : Terminal "LCURLYBRACE" was declared but never used
-Warning : Terminal "OR" was declared but never used
-Warning : Terminal "SEMICOL" was declared but never used
 Warning : Terminal "CLASS" was declared but never used
-Warning : Terminal "DIFFERENT" was declared but never used
 Warning : Terminal "MAIN" was declared but never used
 Warning : Terminal "EXCLAMATION" was declared but never used
 Warning : Terminal "THIS" was declared but never used
 Warning : Terminal "DOT" was declared but never used
 Warning : Terminal "BOOLEAN" was declared but never used
 Warning : Terminal "RETURN" was declared but never used
-Warning : Terminal "DOUBLELITERAL" was declared but never used
 Warning : Terminal "RBRACKET" was declared but never used
-Warning : Terminal "EQUAL" was declared but never used
 Warning : Terminal "TRUE" was declared but never used
 Warning : Terminal "NEW" was declared but never used
 Warning : Terminal "COMA" was declared but never used
-Warning : Terminal "PERCENT" was declared but never used
 Warning : Terminal "VOID" was declared but never used
 Warning : Terminal "INTLITERAL" was declared but never used
-Warning : Terminal "GTHAN" was declared but never used
 Warning : Terminal "ELSE" was declared but never used
-Warning : Terminal "LEQUAL" was declared but never used
 Warning : Terminal "WHILE" was declared but never used
 Warning : Terminal "PUBLIC" was declared but never used
 Warning : Terminal "EXTENDS" was declared but never used
@@ -41,15 +30,13 @@ Warning : Terminal "LENGTH" was declared but never used
 ===== Terminals =====
 [0]EOF [1]error [2]DISPLAY [3]PUBLIC [4]STATIC 
 [5]VOID [6]MAIN [7]CLASS [8]EXTENDS [9]NEW 
-[10]THIS [11]STRING [12]INT [13]DOUBLE [14]BOOLEAN 
-[15]TRUE [16]FALSE [17]IF [18]ELSE [19]WHILE 
-[20]RETURN [21]LENGTH [22]PRINT [23]GTHAN [24]LTHAN 
-[25]DOT [26]EXCLAMATION [27]LEQUAL [28]GEQUAL [29]EQUAL 
-[30]AND [31]OR [32]FSLASH [33]PLUS [34]BECOMES 
-[35]MINUS [36]MULTI [37]DIFFERENT [38]PERCENT [39]LPAREN 
-[40]RPAREN [41]SEMICOLON [42]LBRACKET [43]RBRACKET [44]LCURLYBRACE 
-[45]RCURLYBRACE [46]COMA [47]SEMICOL [48]IDENTIFIER [49]INTLITERAL 
-[50]DOUBLELITERAL 
+[10]THIS [11]STRING [12]INT [13]BOOLEAN [14]TRUE 
+[15]FALSE [16]IF [17]ELSE [18]WHILE [19]RETURN 
+[20]LENGTH [21]PRINT [22]LTHAN [23]DOT [24]EXCLAMATION 
+[25]AND [26]PLUS [27]BECOMES [28]MINUS [29]MULTI 
+[30]LPAREN [31]RPAREN [32]SEMICOLON [33]LBRACKET [34]RBRACKET 
+[35]LCURLYBRACE [36]RCURLYBRACE [37]COMA [38]IDENTIFIER [39]INTLITERAL 
+
 
 ===== Non terminals =====
 [0]Program [1]Statement [2]AssignStatement [3]DisplayStatement [4]Expression 
@@ -390,100 +377,100 @@ lalr_state [31]: {
 -------------------
 -------- ACTION_TABLE --------
 From state #0
- [term 2:SHIFT(to state 3)] [term 17:SHIFT(to state 6)]
- [term 48:SHIFT(to state 8)]
+ [term 2:SHIFT(to state 3)] [term 16:SHIFT(to state 6)]
+ [term 38:SHIFT(to state 8)]
 From state #1
  [term 0:SHIFT(to state 30)] [term 2:SHIFT(to state 3)]
- [term 17:SHIFT(to state 6)] [term 48:SHIFT(to state 8)]
+ [term 16:SHIFT(to state 6)] [term 38:SHIFT(to state 8)]
 From state #2
  [term 0:REDUCE(with prod 5)] [term 2:REDUCE(with prod 5)]
- [term 17:REDUCE(with prod 5)] [term 41:REDUCE(with prod 5)]
- [term 48:REDUCE(with prod 5)]
+ [term 16:REDUCE(with prod 5)] [term 32:REDUCE(with prod 5)]
+ [term 38:REDUCE(with prod 5)]
 From state #3
- [term 39:SHIFT(to state 13)] [term 48:SHIFT(to state 12)]
+ [term 30:SHIFT(to state 13)] [term 38:SHIFT(to state 12)]
 From state #4
  [term 0:REDUCE(with prod 4)] [term 2:REDUCE(with prod 4)]
- [term 17:REDUCE(with prod 4)] [term 41:REDUCE(with prod 4)]
- [term 48:REDUCE(with prod 4)]
+ [term 16:REDUCE(with prod 4)] [term 32:REDUCE(with prod 4)]
+ [term 38:REDUCE(with prod 4)]
 From state #5
- [term 34:SHIFT(to state 25)]
+ [term 27:SHIFT(to state 25)]
 From state #6
- [term 39:SHIFT(to state 10)]
+ [term 30:SHIFT(to state 10)]
 From state #7
  [term 0:REDUCE(with prod 0)] [term 2:REDUCE(with prod 0)]
- [term 17:REDUCE(with prod 0)] [term 48:REDUCE(with prod 0)]
+ [term 16:REDUCE(with prod 0)] [term 38:REDUCE(with prod 0)]
 From state #8
- [term 34:REDUCE(with prod 8)]
+ [term 27:REDUCE(with prod 8)]
 From state #9
  [term 0:REDUCE(with prod 3)] [term 2:REDUCE(with prod 3)]
- [term 17:REDUCE(with prod 3)] [term 41:REDUCE(with prod 3)]
- [term 48:REDUCE(with prod 3)]
+ [term 16:REDUCE(with prod 3)] [term 32:REDUCE(with prod 3)]
+ [term 38:REDUCE(with prod 3)]
 From state #10
- [term 39:SHIFT(to state 13)] [term 48:SHIFT(to state 12)]
+ [term 30:SHIFT(to state 13)] [term 38:SHIFT(to state 12)]
 From state #11
- [term 33:SHIFT(to state 16)] [term 35:SHIFT(to state 17)]
- [term 36:SHIFT(to state 18)] [term 40:SHIFT(to state 22)]
+ [term 26:SHIFT(to state 16)] [term 28:SHIFT(to state 17)]
+ [term 29:SHIFT(to state 18)] [term 31:SHIFT(to state 22)]
 From state #12
- [term 33:REDUCE(with prod 10)] [term 35:REDUCE(with prod 10)]
- [term 36:REDUCE(with prod 10)] [term 40:REDUCE(with prod 10)]
- [term 41:REDUCE(with prod 10)]
+ [term 26:REDUCE(with prod 10)] [term 28:REDUCE(with prod 10)]
+ [term 29:REDUCE(with prod 10)] [term 31:REDUCE(with prod 10)]
+ [term 32:REDUCE(with prod 10)]
 From state #13
- [term 39:SHIFT(to state 13)] [term 48:SHIFT(to state 12)]
+ [term 30:SHIFT(to state 13)] [term 38:SHIFT(to state 12)]
 From state #14
- [term 33:SHIFT(to state 16)] [term 35:SHIFT(to state 17)]
- [term 36:SHIFT(to state 18)] [term 40:SHIFT(to state 15)]
+ [term 26:SHIFT(to state 16)] [term 28:SHIFT(to state 17)]
+ [term 29:SHIFT(to state 18)] [term 31:SHIFT(to state 15)]
 From state #15
- [term 33:REDUCE(with prod 14)] [term 35:REDUCE(with prod 14)]
- [term 36:REDUCE(with prod 14)] [term 40:REDUCE(with prod 14)]
- [term 41:REDUCE(with prod 14)]
+ [term 26:REDUCE(with prod 14)] [term 28:REDUCE(with prod 14)]
+ [term 29:REDUCE(with prod 14)] [term 31:REDUCE(with prod 14)]
+ [term 32:REDUCE(with prod 14)]
 From state #16
- [term 39:SHIFT(to state 13)] [term 48:SHIFT(to state 12)]
+ [term 30:SHIFT(to state 13)] [term 38:SHIFT(to state 12)]
 From state #17
- [term 39:SHIFT(to state 13)] [term 48:SHIFT(to state 12)]
+ [term 30:SHIFT(to state 13)] [term 38:SHIFT(to state 12)]
 From state #18
- [term 39:SHIFT(to state 13)] [term 48:SHIFT(to state 12)]
+ [term 30:SHIFT(to state 13)] [term 38:SHIFT(to state 12)]
 From state #19
- [term 33:REDUCE(with prod 13)] [term 35:REDUCE(with prod 13)]
- [term 36:REDUCE(with prod 13)] [term 40:REDUCE(with prod 13)]
- [term 41:REDUCE(with prod 13)]
+ [term 26:REDUCE(with prod 13)] [term 28:REDUCE(with prod 13)]
+ [term 29:REDUCE(with prod 13)] [term 31:REDUCE(with prod 13)]
+ [term 32:REDUCE(with prod 13)]
 From state #20
- [term 33:REDUCE(with prod 12)] [term 35:REDUCE(with prod 12)]
- [term 36:SHIFT(to state 18)] [term 40:REDUCE(with prod 12)]
- [term 41:REDUCE(with prod 12)]
+ [term 26:REDUCE(with prod 12)] [term 28:REDUCE(with prod 12)]
+ [term 29:SHIFT(to state 18)] [term 31:REDUCE(with prod 12)]
+ [term 32:REDUCE(with prod 12)]
 From state #21
- [term 33:REDUCE(with prod 11)] [term 35:SHIFT(to state 17)]
- [term 36:SHIFT(to state 18)] [term 40:REDUCE(with prod 11)]
- [term 41:REDUCE(with prod 11)]
+ [term 26:REDUCE(with prod 11)] [term 28:SHIFT(to state 17)]
+ [term 29:SHIFT(to state 18)] [term 31:REDUCE(with prod 11)]
+ [term 32:REDUCE(with prod 11)]
 From state #22
- [term 2:SHIFT(to state 3)] [term 17:SHIFT(to state 6)]
- [term 48:SHIFT(to state 8)]
+ [term 2:SHIFT(to state 3)] [term 16:SHIFT(to state 6)]
+ [term 38:SHIFT(to state 8)]
 From state #23
- [term 41:SHIFT(to state 24)]
+ [term 32:SHIFT(to state 24)]
 From state #24
  [term 0:REDUCE(with prod 6)] [term 2:REDUCE(with prod 6)]
- [term 17:REDUCE(with prod 6)] [term 41:REDUCE(with prod 6)]
- [term 48:REDUCE(with prod 6)]
+ [term 16:REDUCE(with prod 6)] [term 32:REDUCE(with prod 6)]
+ [term 38:REDUCE(with prod 6)]
 From state #25
- [term 39:SHIFT(to state 13)] [term 48:SHIFT(to state 12)]
+ [term 30:SHIFT(to state 13)] [term 38:SHIFT(to state 12)]
 From state #26
- [term 33:SHIFT(to state 16)] [term 35:SHIFT(to state 17)]
- [term 36:SHIFT(to state 18)] [term 41:SHIFT(to state 27)]
+ [term 26:SHIFT(to state 16)] [term 28:SHIFT(to state 17)]
+ [term 29:SHIFT(to state 18)] [term 32:SHIFT(to state 27)]
 From state #27
  [term 0:REDUCE(with prod 7)] [term 2:REDUCE(with prod 7)]
- [term 17:REDUCE(with prod 7)] [term 41:REDUCE(with prod 7)]
- [term 48:REDUCE(with prod 7)]
+ [term 16:REDUCE(with prod 7)] [term 32:REDUCE(with prod 7)]
+ [term 38:REDUCE(with prod 7)]
 From state #28
- [term 33:SHIFT(to state 16)] [term 35:SHIFT(to state 17)]
- [term 36:SHIFT(to state 18)] [term 41:SHIFT(to state 29)]
+ [term 26:SHIFT(to state 16)] [term 28:SHIFT(to state 17)]
+ [term 29:SHIFT(to state 18)] [term 32:SHIFT(to state 29)]
 From state #29
  [term 0:REDUCE(with prod 9)] [term 2:REDUCE(with prod 9)]
- [term 17:REDUCE(with prod 9)] [term 41:REDUCE(with prod 9)]
- [term 48:REDUCE(with prod 9)]
+ [term 16:REDUCE(with prod 9)] [term 32:REDUCE(with prod 9)]
+ [term 38:REDUCE(with prod 9)]
 From state #30
  [term 0:REDUCE(with prod 1)]
 From state #31
  [term 0:REDUCE(with prod 2)] [term 2:REDUCE(with prod 2)]
- [term 17:REDUCE(with prod 2)] [term 48:REDUCE(with prod 2)]
+ [term 16:REDUCE(with prod 2)] [term 38:REDUCE(with prod 2)]
 ------------------------------
 -------- REDUCE_TABLE --------
 From state #0
@@ -533,10 +520,10 @@ From state #30
 From state #31
 -----------------------------
 ------- CUP v0.11b 20160615 (GIT 4ac7450) Parser Generation Summary -------
-  0 errors and 40 warnings
-  51 terminals, 7 non-terminals, and 15 productions declared, 
+  0 errors and 29 warnings
+  40 terminals, 7 non-terminals, and 15 productions declared, 
   producing 32 unique parse states.
-  39 terminals declared but not used.
+  28 terminals declared but not used.
   0 non-terminals declared but not used.
   0 productions never reduced.
   0 conflicts detected (0 expected).

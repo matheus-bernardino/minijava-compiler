@@ -108,11 +108,6 @@ digit = [0-9]
 eol = [\r\n]
 comment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 white = {eol}|[ \t]
-exponent = [eE] [+-]? {digit}+
-bigdecimal = {digit}+ "." {digit}*
-smalldecimal = "." {digit}+
-decimaldouble = ({bigdecimal} | {smalldecimal}) {exponent}? ([dD])?
-intdouble = {digit}+ ({exponent} [dD] | {exponent} | [dD])
 %%
 
 /* Token definitions */
@@ -131,7 +126,6 @@ intdouble = {digit}+ ({exponent} [dD] | {exponent} | [dD])
 
 "String" { return symbol(sym.STRING); }
 "int" { return symbol(sym.INT); }
-"double" { return symbol(sym.DOUBLE); }
 "boolean" { return symbol(sym.BOOLEAN); }
 "true" { return symbol(sym.TRUE); }
 "false" { return symbol(sym.FALSE); }
@@ -148,19 +142,11 @@ intdouble = {digit}+ ({exponent} [dD] | {exponent} | [dD])
 "+" { return symbol(sym.PLUS); }
 "=" { return symbol(sym.BECOMES); }
 "-" { return symbol(sym.MINUS); }
-">" { return symbol(sym.GTHAN); }
 "<" { return symbol(sym.LTHAN); }
 "*" { return symbol(sym.MULTI); }
 "." { return symbol(sym.DOT); }
 "!" { return symbol(sym.EXCLAMATION); }
-"%" { return symbol(sym.PERCENT); }
-"<=" { return symbol(sym.LEQUAL); }
-">=" { return symbol(sym.GEQUAL); }
-"==" { return symbol(sym.EQUAL); }
-"!=" { return symbol(sym.DIFFERENT); }
 "&&" { return symbol(sym.AND); }
-"||" { return symbol(sym.OR); }
-"/" { return symbol(sym.FSLASH); }
 
 
 /* delimiters */
@@ -170,7 +156,6 @@ intdouble = {digit}+ ({exponent} [dD] | {exponent} | [dD])
 "{" { return symbol(sym.LCURLYBRACE); }
 "}" { return symbol(sym.RCURLYBRACE); }
 "," { return symbol(sym.COMA); }
-";" { return symbol(sym.SEMICOL); }
 "[" { return symbol(sym.LBRACKET); }
 "]" { return symbol(sym.RBRACKET); }
 
@@ -181,8 +166,6 @@ intdouble = {digit}+ ({exponent} [dD] | {exponent} | [dD])
 
 /* constants */
 {digit}+ { return symbol(sym.INTLITERAL, yytext()); }
-
-({decimaldouble} | {intdouble}) { return symbol(sym.DOUBLELITERAL, yytext()); }
 
 /* comment */
 "//" .* {eol} { /* ignore comments */ }
