@@ -28,56 +28,122 @@ terminal LPAREN, RPAREN, SEMICOLON, LBRACKET, RBRACKET, LCURLYBRACE, RCURLYBRACE
 terminal String IDENTIFIER;
 
 /* constants */
-terminal INTLITERAL;
+terminal Integer INTLITERAL;
 
 /* Nonterminals (constructed by parser): */
 
-nonterminal List<Statement> Program;
+nonterminal Program;
 nonterminal Statement Statement;
 nonterminal Assign AssignStatement;
 nonterminal Display DisplayStatement;
 nonterminal Exp Expression;
 nonterminal Identifier Identifier;
 nonterminal If IfStmt;
+nonterminal While WhileStmt;
+nonterminal ArrayAssign ArrayAssignStmt;
+nonterminal Print PrintStmt;
+nonterminal StatementList StatementList;
+nonterminal ExpList ExpressionList;
+nonterminal Type Type;
+nonterminal Formal Formal;
+nonterminal FormalList FormalList;
+nonterminal VarDecl VarDecl;
+nonterminal VarDeclList VarDeclList;
+nonterminal MethodDecl MethodDecl; 
+nonterminal MethodDeclList MethodDeclList;
+nonterminal ClassDecl ClassDecl;
+nonterminal ClassDeclList ClassDeclList;
+nonterminal MainClass MainClass;
 
 /* Precedence declarations: */
 
-precedence left PLUS;
-precedence left MINUS;
-precedence left MULTI;
-
+precedence right EXCLAMATION, NEW;
+precedence left LTHAN, DOT, PLUS, MINUS, MULTI, AND;
 
 /* Productions: */
 
-Program ::= Statement:s
-            {: List<Statement> p = new LinkedList<Statement>();
-               p.add(s);
-               RESULT = p; :}
-        | Program:p Statement:s
-            {: p.add(s); RESULT = p; :};
+/* Program Productions */
+Program ::= MainClass:m ClassDeclList:cl
+            {: RESULT = new Program(m, cl, mxleft); :}
+          | MainClass:m
+            {: ClassDeclList cl = new ClassDeclList(mxleft); 
+        		RESULT = new Program(m, cl, mxleft); :};
 
+
+
+/* MainClass Production */
+MainClass ::= CLASS Identifier:fi LCURLYBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET Identifier:si RPAREN LCURLYBRACE Statement:s RCURLYBRACE RCURLYBRACE
+            {: RESULT = new MainClass(fi, si, s, fixleft); :};
+
+
+
+/* Statement Productions */
 Statement   ::= AssignStatement:s
                 {: RESULT = s; :}
             | DisplayStatement:s
                 {: RESULT = s; :}
             | IfStmt:s
-            	{: RESULT = s; :};
-            
-            
+            	{: RESULT = s; :}
+            | WhileStmt:s
+            	{: RESULT = s; :}
+            | ArrayAssignStmt:s
+            	{: RESULT = s; :}
+            | PrintStmt:s
+            	{: RESULT = s; :}
+            | LCURLYBRACE StatementList:sl RCURLYBRACE
+            	{: RESULT = new Block(sl, slxleft); :} 
+            | LCURLYBRACE:l RCURLYBRACE
+           		{: 	StatementList s = new StatementList(lxleft); 
+           			RESULT = new Block(s, lxleft); :} ;
+                       
 IfStmt 		::== IF LPAREN Expression:expr RPAREN Statement:s1 SEMICOLON
 				{: RESULT = new If(expr, s1, exprxleft); :};
 
+WhileStmt ::= WHILE LPAREN Expression:expr RPAREN Statement:s1
+				{: RESULT = new While(expr, s1, exprxleft); :};
 
 AssignStatement ::= Identifier:id BECOMES Expression:expr SEMICOLON
                     {: RESULT = new Assign(id, expr, idxleft); :};
 
-Identifier  ::= IDENTIFIER:id
-                {: RESULT = new Identifier(id, idxleft); :};
+ArrayAssignStmt ::= Identifier:id LBRACKET Expression:expr1 RBRACKET BECOMES Expression:expr2 SEMICOLON
+					{: RESULT = new ArrayAssign(id, expr1, expr2, idxleft); :};
+
+PrintStmt ::= PRINT LPAREN Expression:expr RPAREN SEMICOLON
+					{: RESULT = new Print(expr, exprxleft); :};
+
+StatementList ::= Statement:s
+	            {: StatementList sl = new StatementList(sxleft);
+	              sl.add(s);
+	              RESULT = sl; :}
+ 			| StatementList:sl Statement:s
+	            {: sl.add(s);
+	              RESULT = sl; :};
 
 DisplayStatement ::= DISPLAY:d Expression:expr SEMICOLON
                      {: RESULT = new Display(expr, dxleft); :};
 
-Expression    ::= IDENTIFIER:name
+
+
+/* Identifier Production */
+Identifier  ::= IDENTIFIER:id
+                {: RESULT = new Identifier(id, idxleft); :};
+
+
+
+/* Type Productions */
+Type  ::=  INT LBRACKET RBRACKET:rb
+    		{: RESULT = new IntArrayType(rbxleft); :}
+		| INT:i
+    		{: RESULT = new IntegerType(ixleft); :}
+		| BOOLEAN:b
+    		{: RESULT = new BooleanType(bxleft); :}
+    	| IDENTIFIER:i
+    		{: RESULT = new IdentifierType(i, ixleft); :};
+
+
+
+/* Expression Productions */
+Expression  ::= IDENTIFIER:name
             {: RESULT = new IdentifierExp(name, namexleft); :}
         | Expression:arg1 PLUS Expression:arg2
             {: RESULT = new Plus(arg1, arg2, arg1xleft); :}
@@ -85,5 +151,151 @@ Expression    ::= IDENTIFIER:name
             {: RESULT = new Minus(arg1, arg2, arg1xleft); :}
         | Expression:arg1 MULTI Expression:arg2
             {: RESULT = new Times(arg1, arg2, arg1xleft); :}
+        | Expression:arg1 AND Expression:arg2
+            {: RESULT = new And(arg1, arg2, arg1xleft); :}
+        | Expression:arg1 LTHAN Expression:arg2
+            {: RESULT = new LessThan(arg1, arg2, arg1xleft); :}
+        | Expression:arg1 LBRACKET Expression:arg2 RBRACKET
+            {: RESULT = new ArrayLookup(arg1, arg2, arg1xleft); :}
+        | Expression:arg1 DOT LENGTH
+            {: RESULT = new ArrayLength(arg1, arg1xleft); :}
+        | Expression:e DOT Identifier:i LPAREN ExpressionList:el RPAREN
+            {: RESULT = new Call(e, i, el, exleft); :}
+        | Expression:e DOT Identifier:i LPAREN  RPAREN
+            {: RESULT = new Call(e, i, new ExpList(ixleft), exleft); :} 
+        | INTLITERAL:i
+    		{: RESULT = new IntegerLiteral(i, ixleft); :}
+        | TRUE:t
+    		{: RESULT = new True(txleft); :}
+        | FALSE:f
+    		{: RESULT = new False(fxleft); :}
+        | THIS:t
+    		{: RESULT = new This(txleft); :}
+        | NEW INT LBRACKET Expression:arg1 RBRACKET
+            {: RESULT = new NewArray(arg1, arg1xleft); :}
+        | NEW Identifier:arg1 LPAREN RPAREN
+            {: RESULT = new NewObject(arg1, arg1xleft); :}
+        | EXCLAMATION Expression:arg1
+            {: RESULT = new Not(arg1, arg1xleft); :}
         | LPAREN Expression:expr RPAREN
             {: RESULT = expr; :};
+            
+ExpressionList ::= Expression:e
+		    {: ExpList el = new ExpList(exleft);
+		      el.add(e);
+		      RESULT = el; :}
+  		| ExpressionList:el COMA Expression:e
+		    {: el.add(e);
+		      RESULT = el; :}; 
+		      
+		      
+
+/* VarDeclaration Productions */
+VarDecl ::= Type:t Identifier:i SEMICOLON
+            {: RESULT = new VarDecl(t, i, txleft); :}; 
+
+VarDeclList ::= VarDecl:v
+            {: VarDeclList vl = new VarDeclList(vxleft);
+              vl.add(v);
+              RESULT = vl; :}
+          | VarDeclList:vl VarDecl:v
+            {: vl.add(v);
+              RESULT = vl; :};   
+		      
+		      
+
+/* MethodDeclaration Productions */
+MethodDecl ::= PUBLIC Type:t Identifier:i LPAREN FormalList:fl RPAREN
+			LCURLYBRACE VarDeclList:vl StatementList:sl RETURN Expression:e SEMICOLON RCURLYBRACE
+            {: RESULT = new MethodDecl(t, i, fl, vl, sl, e, txleft); :}
+          | PUBLIC Type:t Identifier:i LPAREN FormalList:fl RPAREN
+			LCURLYBRACE:lb RETURN Expression:e SEMICOLON RCURLYBRACE
+            {:  VarDeclList vl = new VarDeclList(lbxleft); StatementList sl = new StatementList(lbxleft);
+            	RESULT = new MethodDecl(t, i, fl, vl, sl, e, txleft); :}
+          | PUBLIC Type:t Identifier:i LPAREN FormalList:fl RPAREN
+			LCURLYBRACE:lb VarDeclList:vl RETURN Expression:e SEMICOLON RCURLYBRACE
+            {:  StatementList sl = new StatementList(lbxleft);
+            	RESULT = new MethodDecl(t, i, fl, vl, sl, e, txleft); :}
+          | PUBLIC Type:t Identifier:i LPAREN FormalList:fl RPAREN
+			LCURLYBRACE:lb StatementList:sl RETURN Expression:e SEMICOLON RCURLYBRACE
+            {:  VarDeclList vl = new VarDeclList(lbxleft);
+	    		RESULT = new MethodDecl(t, i, fl, vl, sl, e, txleft); :}
+	      | PUBLIC Type:t Identifier:i LPAREN RPAREN 
+	    	LCURLYBRACE VarDeclList:vl StatementList:sl RETURN Expression:e SEMICOLON RCURLYBRACE
+	    	{: RESULT = new MethodDecl(t, i, new FormalList(txleft), vl, sl, e, txleft); :}
+	      | PUBLIC Type:t Identifier:i LPAREN RPAREN 
+	    	LCURLYBRACE:lb RETURN Expression:e SEMICOLON RCURLYBRACE
+		    {: VarDeclList vl = new VarDeclList(lbxleft); StatementList sl = new StatementList(lbxleft); 
+		    	RESULT = new MethodDecl(t, i, new FormalList(txleft), vl, sl, e, txleft); :}
+		  | PUBLIC Type:t Identifier:i LPAREN RPAREN 
+	    	LCURLYBRACE:lb VarDeclList:vl RETURN Expression:e SEMICOLON RCURLYBRACE
+		    {: StatementList sl = new StatementList(lbxleft);
+		    	RESULT = new MethodDecl(t, i, new FormalList(txleft), vl, sl, e, txleft); :}
+		  | PUBLIC Type:t Identifier:i LPAREN RPAREN
+	    	LCURLYBRACE:lb StatementList:sl RETURN Expression:e SEMICOLON RCURLYBRACE
+		    {: VarDeclList vl = new VarDeclList(lbxleft);
+		    	RESULT = new MethodDecl(t, i, new FormalList(txleft), vl, sl, e, txleft); :};
+
+MethodDeclList ::= MethodDecl:m
+            {: MethodDeclList ml = new MethodDeclList(mxleft);
+              ml.add(m);
+              RESULT = ml; :}
+          | MethodDeclList:ml MethodDecl:m 
+            {: ml.add(m);
+              RESULT = ml; :};		      
+		      
+		     
+
+/* ClassDeclaration Productions */
+ClassDecl ::= CLASS Identifier:fi EXTENDS Identifier:si
+			LCURLYBRACE:lb VarDeclList:vl MethodDeclList:ml RCURLYBRACE
+			{: RESULT = new ClassDeclExtends(fi, si, vl, ml, fixleft); :}
+		   | CLASS Identifier:fi EXTENDS Identifier:si
+			LCURLYBRACE:lb VarDeclList:vl RCURLYBRACE
+			{: MethodDeclList ml = new MethodDeclList(lbxleft);
+				RESULT = new ClassDeclExtends(fi, si, vl, ml, fixleft); :}
+		   | CLASS Identifier:fi EXTENDS Identifier:si
+			LCURLYBRACE:lb MethodDeclList:ml RCURLYBRACE
+			{: VarDeclList vl = new VarDeclList(lbxleft);
+				RESULT = new ClassDeclExtends(fi, si, vl, ml, fixleft); :}
+		   | CLASS Identifier:fi EXTENDS Identifier:si
+			LCURLYBRACE:lb RCURLYBRACE
+			{: VarDeclList vl = new VarDeclList(lbxleft); MethodDeclList ml = new MethodDeclList(lbxleft);
+				RESULT = new ClassDeclExtends(fi, si, vl, ml, fixleft); :} 
+		   | CLASS Identifier:fi 
+		   	LCURLYBRACE:lb VarDeclList:vl MethodDeclList:ml RCURLYBRACE
+			{: RESULT = new ClassDeclSimple(fi, vl, ml, fixleft); :}
+           | CLASS Identifier:fi
+           	LCURLYBRACE:lb VarDeclList:vl RCURLYBRACE
+       		{: MethodDeclList ml = new MethodDeclList(lbxleft);
+       			RESULT = new ClassDeclSimple(fi, vl, ml, fixleft); :}
+           | CLASS Identifier:fi
+           	LCURLYBRACE:lb MethodDeclList:ml RCURLYBRACE
+           		{: VarDeclList vl = new VarDeclList(lbxleft);
+       			RESULT = new ClassDeclSimple(fi, vl, ml, fixleft); :}
+           | CLASS Identifier:fi 
+            LCURLYBRACE:lb RCURLYBRACE
+            	{: VarDeclList vl = new VarDeclList(lbxleft); MethodDeclList ml = new MethodDeclList(lbxleft);
+       			RESULT = new ClassDeclSimple(fi, vl, ml, fixleft); :};
+
+ClassDeclList ::= ClassDecl:c
+				{: ClassDeclList cl = new ClassDeclList(cxleft);
+				  cl.add(c);
+  				RESULT = cl; :}
+			| ClassDeclList:cl ClassDecl:c
+				{: cl.add(c);
+				RESULT = cl; :};
+
+          
+              
+/* Formal Productions */		                 
+Formal ::= Type:t Identifier:i
+            {: RESULT = new Formal(t, i, txleft); :};
+
+FormalList ::= Formal:f
+            {: FormalList fl = new FormalList(fxleft);
+              fl.add(f);
+              RESULT = fl; :}
+          | FormalList:fl COMA Formal:f
+            {: fl.add(f);
+              RESULT = fl; :};           
