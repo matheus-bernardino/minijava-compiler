@@ -106,8 +106,8 @@ import Parser.sym;
 letter = [a-zA-Z]
 digit = [0-9]
 eol = [\r\n]
-comment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 white = {eol}|[ \t]
+literal = [0-9]+
 %%
 
 /* Token definitions */
@@ -165,7 +165,7 @@ white = {eol}|[ \t]
 }
 
 /* constants */
-{digit}+ { return symbol(sym.INTLITERAL, yytext()); }
+{digit}+ { return symbol(sym.INTLITERAL, new Integer(yytext())); }
 
 /* comment */
 "//" .* {eol} { /* ignore comments */ }
