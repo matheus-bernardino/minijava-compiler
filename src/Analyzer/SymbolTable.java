@@ -18,7 +18,7 @@ public class SymbolTable {
 	}
 	
 	public void setClass(ClassAnalyzer _class) {
-		if(table.contains(_class.getClassName())) 
+		if(!table.containsKey(_class.getClassName())) 
 			table.put(_class.getClassName(), _class);
 	}
 	
