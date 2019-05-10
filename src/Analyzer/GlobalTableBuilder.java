@@ -123,8 +123,43 @@ public class GlobalTableBuilder implements Visitor {
 
 	@Override
 	public void visit(ClassDeclExtends n) {
-		// TODO Auto-generated method stub
-
+		ClassAnalyzer classeExtends = new ClassAnalyzer(n.i.s, n.j.s);
+		
+		// Add variables to this class
+		for(int i = 0; i < n.vl.size(); i++)
+		{
+//			Variable auxVariable = (Variable)classDeclSimple.vl.elementAt(i).accept(this);
+			VariableAnalyzer auxVar = new VariableAnalyzer(n.vl.get(i).t, n.vl.get(i).i.s);
+//			n.vl.get(i);
+			if(!classeExtends.getClassVariables().containsKey(auxVar.getName()))
+				classeExtends.getClassVariables().put(auxVar.getName(), auxVar);
+			else
+				errorList.add("In the line of number " + n.vl.get(i).line_number + " this error occured: " + 
+							   "The variable " + auxVar.getName() + 
+							   " is already in the class " + classeExtends.getClassName() + ".");
+		}
+		
+		// Add methods for the class
+		for(int i = 0; i < n.ml.size(); i++)
+		{
+			MethodAnalyzer auxMeth = new MethodAnalyzer(n.ml.get(i).t, n.ml.get(i).i.s);
+			n.ml.get(i).accept(this);
+			
+			if(!classeExtends.getClassMethods().containsKey(auxMeth.getName()))
+				classeExtends.getClassMethods().put(auxMeth.getName(), auxMeth);
+			else
+				errorList.add("In the line of number " + n.ml.get(i).line_number + " this error occured: " + 
+							   "The method " + auxMeth.getName() + 
+							   "is already in the class " + classeExtends.getClassName() + ".");	
+		}
+		
+		// Add class to the globalTable
+		if(!globalTable.getTable().containsKey(classeExtends.getClassName()))
+			globalTable.setClass(classeExtends);
+		else
+			errorList.add("In the line number " + n.line_number + " this error occured: " + 
+						   "The class " + classeExtends.getClassName() + " already exists.");
+	
 	}
 
 	@Override
