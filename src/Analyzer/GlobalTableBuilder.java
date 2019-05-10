@@ -94,7 +94,7 @@ public class GlobalTableBuilder implements Visitor {
 			if(!simpleClass.getClassVariables().containsKey(auxVar.getName()))
 				simpleClass.getClassVariables().put(auxVar.getName(), auxVar);
 			else
-				errorList.add("In the line number " + n.vl.get(i).line_number + " this error occured: " + 
+				errorList.add("In the line of number " + n.vl.get(i).line_number + " this error occured: " + 
 							   "The variable " + auxVar.getName() + 
 							   " is already in the class " + simpleClass.getClassName() + ".");
 		}
@@ -102,8 +102,15 @@ public class GlobalTableBuilder implements Visitor {
 		// Add methods for the class
 		for(int i = 0; i < n.ml.size(); i++)
 		{
-//			Method auxMethod = (Method)classDeclSimple.ml.elementAt(i).accept(this); 
-//			n.ml.get(i); 
+			MethodAnalyzer auxMeth = new MethodAnalyzer(n.ml.get(i).t, n.ml.get(i).i.s);
+			n.ml.get(i).accept(this);
+			
+			if(!simpleClass.getClassMethods().containsKey(auxMeth.getName()))
+				simpleClass.getClassMethods().put(auxMeth.getName(), auxMeth);
+			else
+				errorList.add("In the line of number " + n.ml.get(i).line_number + " this error occured: " + 
+							   "The method " + auxMeth.getName() + 
+							   "is already in the class " + simpleClass.getClassName() + ".");	
 		}
 		
 		// Add class to the globalTable
