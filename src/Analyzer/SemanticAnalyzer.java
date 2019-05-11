@@ -39,6 +39,7 @@ import AST.Program;
 import AST.This;
 import AST.Times;
 import AST.True;
+import AST.Type;
 import AST.VarDecl;
 import AST.While;
 import AST.Visitor.Visitor;
@@ -114,13 +115,25 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(VarDecl n) {
-		// TODO Auto-generated method stub
-
+		if(!(n.t instanceof BooleanType) 
+		   && !(n.t instanceof IntegerType)
+		   && (!(n.t instanceof IdentifierType) && (symbolTable.getTable().containsKey(((IdentifierType) n.t).s)))) {
+			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+					"The type " + ((IdentifierType) n.t).s + " was not declared.");
+		}
 	}
 
 	@Override
 	public void visit(MethodDecl n) {
-		// TODO Auto-generated method stub
+		if(currentClass.getClassMethods().containsKey(n.i.s)) 
+			currentMethod = currentClass.getClassMethods().get(n.i.s);
+		
+		for (int i = 0; i < n.vl.size(); i++) 
+			n.vl.get(i).accept(this);
+		
+			
+		for (int i = 0; i < n.sl.size(); i++) 
+			n.sl.get(i).accept(this);
 
 	}
 
@@ -162,8 +175,8 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(Block n) {
-		// TODO Auto-generated method stub
-
+		for (int i = 0; i < n.sl.size(); i++)
+			n.sl.get(i).accept(this);
 	}
 
 	@Override
