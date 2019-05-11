@@ -69,8 +69,14 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(Program n) {
-		// TODO Auto-generated method stub
+		currentClass = symbolTable.getClass(n.m.i1.s);
+		currentMethod = null;
 
+		n.m.s.accept(this);
+
+		for (int i = 0; i < n.cl.size(); i++) {
+			n.cl.get(i).accept(this);
+		}
 	}
 
 	@Override
@@ -81,14 +87,29 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(ClassDeclSimple n) {
-		// TODO Auto-generated method stub
+		currentClass = symbolTable.getClass(n.i.s);
 
+		for (int i = 0; i < n.vl.size(); i++) 
+			n.vl.get(i).accept(this);
+
+		for (int i = 0; i < n.ml.size(); i++) 
+			n.ml.get(i).accept(this);
 	}
 
 	@Override
 	public void visit(ClassDeclExtends n) {
-		// TODO Auto-generated method stub
+		currentClass = symbolTable.getClass(n.i.s);
+		currentClass.setParentClassName(n.j.s);
 
+		for (int i = 0; i < n.vl.size(); i++)
+			n.vl.get(i).accept(this);
+
+		if (!symbolTable.getTable().containsKey(n.j.s))
+			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+						"The class " + n.j.s + " to be inherited does not exits.");
+
+		for (int i = 0; i < n.ml.size(); i++) 
+			n.ml.get(i).accept(this);
 	}
 
 	@Override
