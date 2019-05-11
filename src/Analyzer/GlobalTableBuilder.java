@@ -77,13 +77,13 @@ public class GlobalTableBuilder implements Visitor {
 
 	@Override
 	public void visit(MainClass n) {
-		ClassAnalyzer mainClass = new ClassAnalyzer(n.i1.s, null);
+		ClassAnalyzer mainClass = new ClassAnalyzer("", n.i1.s);
 		globalTable.setClass(mainClass);
 	}
 
 	@Override
 	public void visit(ClassDeclSimple n) {
-		ClassAnalyzer simpleClass = new ClassAnalyzer(n.i.s, null);
+		ClassAnalyzer simpleClass = new ClassAnalyzer("", n.i.s);
 		
 		// Add variables to this class
 		for(int i = 0; i < n.vl.size(); i++)
@@ -123,7 +123,7 @@ public class GlobalTableBuilder implements Visitor {
 
 	@Override
 	public void visit(ClassDeclExtends n) {
-		ClassAnalyzer classeExtends = new ClassAnalyzer(n.i.s, n.j.s);
+		ClassAnalyzer classeExtends = new ClassAnalyzer(n.j.s, n.i.s);
 		
 		// Add variables to this class
 		for(int i = 0; i < n.vl.size(); i++)
@@ -169,7 +169,35 @@ public class GlobalTableBuilder implements Visitor {
 
 	@Override
 	public void visit(MethodDecl n) {
-		// TODO Auto-generated method stub
+		MethodAnalyzer auxMeth = new MethodAnalyzer(n.t, n.i.s);
+		VariableAnalyzer auxVar;
+		
+		for(int i = 0; i < n.fl.size(); i++)
+		{
+			auxVar = new VariableAnalyzer(n.fl.get(i).t, n.fl.get(i).i.s);
+		
+			if(!auxMeth.getArguments().containsKey(auxVar.getName()))
+				auxMeth.getArguments().put(auxVar.getName(), auxVar);
+			else
+				errorList.add("In the line of number " + n.fl.get(i).line_number + " this error occured: " + 
+						   "The argument variable " + auxVar.getName() + 
+						   " is already in the method parameters " + auxMeth.getName() + ".");
+		}
+		
+		/* Adds the local variables of the Method */
+		for(int i = 0; i < n.vl.size(); i++)
+		{
+			auxVar = new VariableAnalyzer(n.vl.get(i).t, n.vl.get(i).i.s);
+			
+			if(!auxMeth.getLoacalVariables().containsKey(auxVar.getName()) && 
+			   !auxMeth.getArguments().containsKey(auxVar.getName()))
+				auxMeth.getLoacalVariables().put(auxVar.getName(), auxVar);
+			else
+				errorList.add("In the line of number " + n.vl.get(i).line_number 
+						      + " this error occured: " 
+						      + "The variable " + auxVar.getName() 
+						      + " is already in the method local variables " + auxMeth.getName() + ".");
+		}
 
 	}
 
