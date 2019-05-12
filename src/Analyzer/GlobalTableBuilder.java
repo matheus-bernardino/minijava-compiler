@@ -48,8 +48,8 @@ public class GlobalTableBuilder implements Visitor {
 	private Vector<String> errorList;
 	
 	public GlobalTableBuilder() {
-		this.setTable(new SymbolTable());
-		this.setErrorList(new Vector<String>());
+		globalTable = new SymbolTable();
+		errorList = new Vector<String>();
 	}
 	
 	

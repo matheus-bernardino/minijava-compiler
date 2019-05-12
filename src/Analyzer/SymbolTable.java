@@ -1,12 +1,13 @@
 package Analyzer;
 
 import java.util.Hashtable;
+import java.util.Set;
 
 public class SymbolTable {
 	private Hashtable<String, ClassAnalyzer> table;
 	
 	public SymbolTable() {
-		this.setTable(new Hashtable<String, ClassAnalyzer>());
+		table = new Hashtable<String, ClassAnalyzer>();
 	}
 
 	public Hashtable<String, ClassAnalyzer> getTable() {
@@ -23,10 +24,13 @@ public class SymbolTable {
 	}
 	
 	public ClassAnalyzer getClass(String _className) {
-		if(table.contains(_className)) 
+		if(table.containsKey(_className))
+		{
+			System.out.println("inferno");
 			return table.get(_className);
+		}
 		
-		return null;
+		return new ClassAnalyzer("", "");
 	}
 
 	public boolean checkVariable(ClassAnalyzer _class, MethodAnalyzer _method, String variableName) {

@@ -82,8 +82,7 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(MainClass n) {
-		// TODO Auto-generated method stub
-
+		n.s.accept(this);
 	}
 
 	@Override
@@ -117,24 +116,56 @@ public class SemanticAnalyzer implements Visitor {
 	public void visit(VarDecl n) {
 		if(!(n.t instanceof BooleanType) 
 		   && !(n.t instanceof IntegerType)
-		   && (!(n.t instanceof IdentifierType) && (symbolTable.getTable().containsKey(((IdentifierType) n.t).s)))) {
+		   && !(n.t instanceof IdentifierType)
+		   && !(n.t instanceof IntArrayType)) {
 			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
-					"The type " + ((IdentifierType) n.t).s + " was not declared.");
+					"The type was not declared.");
 		}
 	}
 
 	@Override
 	public void visit(MethodDecl n) {
-		if(currentClass.getClassMethods().containsKey(n.i.s)) 
-			currentMethod = currentClass.getClassMethods().get(n.i.s);
+		for (int i = 0; i < n.fl.size(); i++) 
+			n.fl.get(i).accept(this);
 		
 		for (int i = 0; i < n.vl.size(); i++) 
 			n.vl.get(i).accept(this);
 		
-			
 		for (int i = 0; i < n.sl.size(); i++) 
 			n.sl.get(i).accept(this);
+		
+		n.e.accept(this);
+		
+		System.out.println(currentClass.getClassName());
+		currentMethod = symbolTable.getClass(currentClass.getClassName()).getClassMethods().get(n.i.s);
+		System.out.println(currentMethod.getType());
+		System.out.println(n.t);
+		
+		if (currentMethod.getType() instanceof IdentifierType && n.t instanceof IdentifierType) {
+			IdentifierType t1 = (IdentifierType) n.t;
+			IdentifierType t2 = (IdentifierType) currentMethod.getType();
 
+			
+			Boolean error = false;
+			
+			if (!t1.s.equals(t2.s))
+				error = true;
+			else {
+				ClassAnalyzer aux = symbolTable.getClass(t2.s);
+				while (aux != null) {
+					if (t1.s.equals(aux.getClassName()))
+						error = true;
+	
+					aux = symbolTable.getClass(aux.getParentClassName());
+				}
+			}
+			
+			if(!error) {
+				errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+						"The type and method's return" + currentMethod.getName() +
+						" of the class " + currentClass.getClassName() + " are differents.");
+			}
+		}
 	}
 
 	@Override
