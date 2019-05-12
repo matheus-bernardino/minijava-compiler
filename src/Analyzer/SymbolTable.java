@@ -26,7 +26,6 @@ public class SymbolTable {
 	public ClassAnalyzer getClass(String _className) {
 		if(table.containsKey(_className))
 		{
-			System.out.println("inferno");
 			return table.get(_className);
 		}
 		
@@ -41,7 +40,9 @@ public class SymbolTable {
 		if (auxClass.getClassVariables().containsKey(variableName))
 			return true;
 		
-		if (table.containsKey(_class.getClassName()) && _class.getClassMethods().containsKey(_method.getName())){
+		if (table.containsKey(_class.getClassName()) && 
+		    _method != null && _class.getClassMethods().containsKey(_method.getName())){
+			
 			if (_class.getClassMethods().containsKey(_method.getName())){
 				MethodAnalyzer auxMethod = _class.getClassMethods().get(_method.getName());
 				
@@ -51,9 +52,9 @@ public class SymbolTable {
 					return true;
 			}
 		}
-
+		System.out.println("merda aqui ");
 		auxClass = getClass(_class.getParentClassName());
-		while (auxClass != null) {
+		while (auxClass.getClassName() != "") {
 			if (auxClass.getClassVariables().containsKey(variableName))
 				return true;
 

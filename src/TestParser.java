@@ -39,8 +39,9 @@ public class TestParser {
             	System.out.println("\nErrors encountered on the construction os the table");
             
             semanticAnalaizer.setSymbolTable(globalTable.getTable());
+            semanticAnalaizer.setIdentifiersType(globalTable.getIdentifiersType());
             program.accept(semanticAnalaizer);
-            
+
             if(semanticAnalaizer.getErrorList().isEmpty())
             	System.out.println("Semantic analizes succesful");
             else {

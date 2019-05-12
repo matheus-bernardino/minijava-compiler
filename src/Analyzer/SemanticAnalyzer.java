@@ -1,5 +1,7 @@
 package Analyzer;
 
+import java.util.HashMap;
+import java.util.Set;
 import java.util.Vector;
 
 import AST.And;
@@ -47,13 +49,18 @@ import AST.Visitor.Visitor;
 public class SemanticAnalyzer implements Visitor {
 	private SymbolTable symbolTable;
 	private Vector<String> errorList;
+	private HashMap<String, Type> identifiersType;
 	
 	private ClassAnalyzer currentClass;
 	private MethodAnalyzer currentMethod;
 	
+	private Type analyzerType;
+	
+	
 	public SemanticAnalyzer() {
 		this.setSymbolTable(new SymbolTable());
 		this.setErrorList(new Vector<String>());
+		this.setIdentifiersType(new HashMap<String, Type>());
 	}
 	
 	@Override
@@ -72,7 +79,12 @@ public class SemanticAnalyzer implements Visitor {
 	public void visit(Program n) {
 		currentClass = symbolTable.getClass(n.m.i1.s);
 		currentMethod = null;
-
+//		
+//		Set<String> keys = identifiersType.keySet();
+//        for(String key: keys){
+//            System.out.println("Value of "+key+" is: "+ identifiersType.get(key));
+//        }
+//		
 		n.m.s.accept(this);
 
 		for (int i = 0; i < n.cl.size(); i++) {
@@ -82,13 +94,15 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(MainClass n) {
+		n.i1.accept(this);
+		n.i2.accept(this);
 		n.s.accept(this);
 	}
 
 	@Override
 	public void visit(ClassDeclSimple n) {
 		currentClass = symbolTable.getClass(n.i.s);
-
+		n.i.accept(this);
 		for (int i = 0; i < n.vl.size(); i++) 
 			n.vl.get(i).accept(this);
 
@@ -100,7 +114,7 @@ public class SemanticAnalyzer implements Visitor {
 	public void visit(ClassDeclExtends n) {
 		currentClass = symbolTable.getClass(n.i.s);
 		currentClass.setParentClassName(n.j.s);
-
+		n.i.accept(this);
 		for (int i = 0; i < n.vl.size(); i++)
 			n.vl.get(i).accept(this);
 
@@ -125,6 +139,8 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(MethodDecl n) {
+		currentMethod = symbolTable.getClass(currentClass.getClassName()).getClassMethods().get(n.i.s);
+		
 		for (int i = 0; i < n.fl.size(); i++) 
 			n.fl.get(i).accept(this);
 		
@@ -136,36 +152,36 @@ public class SemanticAnalyzer implements Visitor {
 		
 		n.e.accept(this);
 		
-		System.out.println(currentClass.getClassName());
-		currentMethod = symbolTable.getClass(currentClass.getClassName()).getClassMethods().get(n.i.s);
-		System.out.println(currentMethod.getType());
-		System.out.println(n.t);
+//		System.out.println(currentClass.getClassName());
+//		System.out.println(currentMethod.getType());
+//		System.out.println(n.t);
 		
-		if (currentMethod.getType() instanceof IdentifierType && n.t instanceof IdentifierType) {
-			IdentifierType t1 = (IdentifierType) n.t;
-			IdentifierType t2 = (IdentifierType) currentMethod.getType();
-
-			
-			Boolean error = false;
-			
-			if (!t1.s.equals(t2.s))
-				error = true;
-			else {
-				ClassAnalyzer aux = symbolTable.getClass(t2.s);
-				while (aux != null) {
-					if (t1.s.equals(aux.getClassName()))
-						error = true;
-	
-					aux = symbolTable.getClass(aux.getParentClassName());
-				}
-			}
-			
-			if(!error) {
-				errorList.add("In the line of number " + n.line_number + " this error occured: " + 
-						"The type and method's return" + currentMethod.getName() +
-						" of the class " + currentClass.getClassName() + " are differents.");
-			}
-		}
+//		if (currentMethod.getType() instanceof IdentifierType && n.t instanceof IdentifierType) {
+//			IdentifierType t1 = (IdentifierType) n.t;
+//			IdentifierType t2 = (IdentifierType) currentMethod.getType();
+//
+//			
+//			Boolean error = false;
+//			
+//			if (!t1.s.equals(t2.s))
+//				error = true;
+//			else {
+//				ClassAnalyzer aux = symbolTable.getClass(t2.s);
+//				while (aux != null) {
+//					System.out.println("merda");
+//					if (t1.s.equals(aux.getClassName()))
+//						error = true;
+//	
+//					aux = symbolTable.getClass(aux.getParentClassName());
+//				}
+//			}
+//			
+//			if(!error) {
+//				errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+//						"The type and method's return" + currentMethod.getName() +
+//						" of the class " + currentClass.getClassName() + " are differents.");
+//			}
+//		}
 	}
 
 	@Override
@@ -212,31 +228,38 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(If n) {
-		// TODO Auto-generated method stub
-
+		n.e.accept(this);
 	}
 
 	@Override
 	public void visit(While n) {
-		// TODO Auto-generated method stub
-
+		n.e.accept(this);
 	}
 
 	@Override
 	public void visit(Print n) {
-		// TODO Auto-generated method stub
+		n.e.accept(this);
 
 	}
 
 	@Override
 	public void visit(Assign n) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(ArrayAssign n) {
-		// TODO Auto-generated method stub
+		n.e1.accept(this);
+		Type type1 = analyzerType;
+		
+		n.e2.accept(this);
+		Type type2 = analyzerType;
+		
+		if (!(type1 instanceof IntegerType && type2 instanceof IntegerType)) {
+			System.out.println("Type 1 " + type1 + " Type 2 " + type2);
+			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+					"The expressions in ArrayAssign are not IntArrayType or Integer.");
+		}
 
 	}
 
@@ -248,38 +271,88 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(LessThan n) {
-		// TODO Auto-generated method stub
+		n.e1.accept(this);
+		Type type1 = analyzerType;
+		
+		n.e2.accept(this);
+		Type type2 = analyzerType;
+		
+		if (!(type1 instanceof IntegerType && type2 instanceof IntegerType)) {
+//			System.out.println("Type 1 " + type1 + " Type 2 " + type2);
+			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+					"The expressions in LessThan are not integers.");
+		}
+
 
 	}
 
 	@Override
 	public void visit(Plus n) {
-		// TODO Auto-generated method stub
-
+		n.e1.accept(this);
+		Type type1 = analyzerType;
+		
+		n.e2.accept(this);
+		Type type2 = analyzerType;
+		
+		if (!(type1 instanceof IntegerType && type2 instanceof IntegerType)) {
+//			System.out.println("Type 1 " + type1 + " Type 2 " + type2);
+			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+					"The expressions in Plus are not integers.");
+		}
 	}
 
 	@Override
 	public void visit(Minus n) {
-		// TODO Auto-generated method stub
-
+		n.e1.accept(this);
+		Type type1 = analyzerType;
+		
+		n.e2.accept(this);
+		Type type2 = analyzerType;
+		
+		if (!(type1 instanceof IntegerType && type2 instanceof IntegerType)) {
+			System.out.println("Type 1 " + type1 + " Type 2 " + type2);
+			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+					"The expressions in Minus are not integers.");
+		}
 	}
 
 	@Override
 	public void visit(Times n) {
-		// TODO Auto-generated method stub
-
+		n.e1.accept(this);
+		Type type1 = analyzerType;
+		
+		n.e2.accept(this);
+		Type type2 = analyzerType;
+		
+		if (!(type1 instanceof IntegerType && type2 instanceof IntegerType)) {
+//			System.out.println("Type 1 " + type1 + " Type 2 " + type2);
+			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+					"The expressions in Times are not integers.");
+		}
 	}
 
 	@Override
 	public void visit(ArrayLookup n) {
-		// TODO Auto-generated method stub
+		n.e1.accept(this);
+		Type type1 = analyzerType;
+		n.e2.accept(this);
+		Type type2 = analyzerType;
+		
+		if (!(type1 instanceof IntegerType && type2 instanceof IntegerType))
+			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+					"The expressions in ArrayLookup are not integers.");
 
 	}
 
 	@Override
 	public void visit(ArrayLength n) {
-		// TODO Auto-generated method stub
-
+		n.e.accept(this);
+		
+		Type type = analyzerType;
+		
+		if(!(type instanceof IntegerType))
+			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+					"The expressions in ArrayLength is not integer.");
 	}
 
 	@Override
@@ -308,8 +381,7 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(IdentifierExp n) {
-		// TODO Auto-generated method stub
-
+		analyzerType = identifiersType.get(n.s);
 	}
 
 	@Override
@@ -320,7 +392,7 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(NewArray n) {
-		// TODO Auto-generated method stub
+		n.e.accept(this);
 
 	}
 
@@ -334,16 +406,17 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(Not n) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	@Override
 	public void visit(Identifier n) {
-		if (!this.getSymbolTable().checkVariable(currentClass, currentMethod, n.s)) {
-			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
-					   "The identifier " + n.s + " was not declared before.");
-		}
+//		if (!this.getSymbolTable().checkVariable(currentClass, currentMethod, n.s)) {
+////			System.out.println(currentMethod.getName());
+//			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
+//					   "The identifier " + n.s + " was not declared before.");
+//		}
 	}
 
 	@Override
@@ -372,6 +445,14 @@ public class SemanticAnalyzer implements Visitor {
 
 	public void setErrorList(Vector<String> errorList) {
 		this.errorList = errorList;
+	}
+
+	public HashMap<String, Type> getIdentifiersType() {
+		return identifiersType;
+	}
+
+	public void setIdentifiersType(HashMap<String, Type> identifiersType) {
+		this.identifiersType = identifiersType;
 	}
 
 }

@@ -1,5 +1,6 @@
 package Analyzer;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 import AST.And;
@@ -39,6 +40,7 @@ import AST.Program;
 import AST.This;
 import AST.Times;
 import AST.True;
+import AST.Type;
 import AST.VarDecl;
 import AST.While;
 import AST.Visitor.Visitor;
@@ -46,10 +48,12 @@ import AST.Visitor.Visitor;
 public class GlobalTableBuilder implements Visitor {
 	private SymbolTable globalTable;
 	private Vector<String> errorList;
+	private HashMap<String, Type> identifiersType;
 	
 	public GlobalTableBuilder() {
-		globalTable = new SymbolTable();
-		errorList = new Vector<String>();
+		this.globalTable = new SymbolTable();
+		this.errorList = new Vector<String>();
+		this.identifiersType = new HashMap<String, Type>();
 	}
 	
 	
@@ -88,6 +92,7 @@ public class GlobalTableBuilder implements Visitor {
 		// Add variables to this class
 		for(int i = 0; i < n.vl.size(); i++)
 		{
+			n.vl.get(i).accept(this);
 //			Variable auxVariable = (Variable)classDeclSimple.vl.elementAt(i).accept(this);
 			VariableAnalyzer auxVar = new VariableAnalyzer(n.vl.get(i).t, n.vl.get(i).i.s);
 //			n.vl.get(i);
@@ -102,8 +107,8 @@ public class GlobalTableBuilder implements Visitor {
 		// Add methods for the class
 		for(int i = 0; i < n.ml.size(); i++)
 		{
-			MethodAnalyzer auxMeth = new MethodAnalyzer(n.ml.get(i).t, n.ml.get(i).i.s);
 			n.ml.get(i).accept(this);
+			MethodAnalyzer auxMeth = new MethodAnalyzer(n.ml.get(i).t, n.ml.get(i).i.s);
 			
 			if(!simpleClass.getClassMethods().containsKey(auxMeth.getName()))
 				simpleClass.getClassMethods().put(auxMeth.getName(), auxMeth);
@@ -128,6 +133,7 @@ public class GlobalTableBuilder implements Visitor {
 		// Add variables to this class
 		for(int i = 0; i < n.vl.size(); i++)
 		{
+			n.vl.get(i).accept(this);
 //			Variable auxVariable = (Variable)classDeclSimple.vl.elementAt(i).accept(this);
 			VariableAnalyzer auxVar = new VariableAnalyzer(n.vl.get(i).t, n.vl.get(i).i.s);
 //			n.vl.get(i);
@@ -142,8 +148,8 @@ public class GlobalTableBuilder implements Visitor {
 		// Add methods for the class
 		for(int i = 0; i < n.ml.size(); i++)
 		{
-			MethodAnalyzer auxMeth = new MethodAnalyzer(n.ml.get(i).t, n.ml.get(i).i.s);
 			n.ml.get(i).accept(this);
+			MethodAnalyzer auxMeth = new MethodAnalyzer(n.ml.get(i).t, n.ml.get(i).i.s);
 			
 			if(!classeExtends.getClassMethods().containsKey(auxMeth.getName()))
 				classeExtends.getClassMethods().put(auxMeth.getName(), auxMeth);
@@ -154,8 +160,9 @@ public class GlobalTableBuilder implements Visitor {
 		}
 		
 		// Add class to the globalTable
-		if(!globalTable.getTable().containsKey(classeExtends.getClassName()))
+		if(!globalTable.getTable().containsKey(classeExtends.getClassName())) {
 			globalTable.setClass(classeExtends);
+		}
 		else
 			errorList.add("In the line number " + n.line_number + " this error occured: " + 
 						   "The class " + classeExtends.getClassName() + " already exists.");
@@ -164,16 +171,20 @@ public class GlobalTableBuilder implements Visitor {
 
 	@Override
 	public void visit(VarDecl n) {
-		
+		identifiersType.put(n.i.s, n.t);
+		n.i.accept(this);
 	}
 
 	@Override
 	public void visit(MethodDecl n) {
+		identifiersType.put(n.i.s, n.t);
+
 		MethodAnalyzer auxMeth = new MethodAnalyzer(n.t, n.i.s);
 		VariableAnalyzer auxVar;
 		
 		for(int i = 0; i < n.fl.size(); i++)
 		{
+			n.fl.get(i).accept(this);
 			auxVar = new VariableAnalyzer(n.fl.get(i).t, n.fl.get(i).i.s);
 		
 			if(!auxMeth.getArguments().containsKey(auxVar.getName()))
@@ -187,6 +198,7 @@ public class GlobalTableBuilder implements Visitor {
 		/* Adds the local variables of the Method */
 		for(int i = 0; i < n.vl.size(); i++)
 		{
+			n.vl.get(i).accept(this);
 			auxVar = new VariableAnalyzer(n.vl.get(i).t, n.vl.get(i).i.s);
 			
 			if(!auxMeth.getLoacalVariables().containsKey(auxVar.getName()) && 
@@ -198,13 +210,17 @@ public class GlobalTableBuilder implements Visitor {
 						      + "The variable " + auxVar.getName() 
 						      + " is already in the method local variables " + auxMeth.getName() + ".");
 		}
+		
+		for (int i = 0; i < n.sl.size(); i++) 
+			n.sl.get(i).accept(this);
+		
+		n.e.accept(this);
 
 	}
 
 	@Override
 	public void visit(Formal n) {
-		// TODO Auto-generated method stub
-
+		identifiersType.put(n.i.s, n.t);
 	}
 
 	@Override
@@ -405,6 +421,16 @@ public class GlobalTableBuilder implements Visitor {
 
 	public void setTable(SymbolTable globalTable) {
 		this.globalTable = globalTable;
+	}
+
+
+	public HashMap<String, Type> getIdentifiersType() {
+		return identifiersType;
+	}
+
+
+	public void setIdentifiersType(HashMap<String, Type> identifiersType) {
+		this.identifiersType = identifiersType;
 	}
 
 }
