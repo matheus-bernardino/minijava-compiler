@@ -12,16 +12,10 @@ import java.io.*;
 
 public class TestParser {
     public static void main(String [] args) {
-        try {
+    	try {
             // create a scanner on the input file
-        	GlobalTableBuilder globalTable = new GlobalTableBuilder();
-        	SemanticAnalyzer semanticAnalaizer = new SemanticAnalyzer();
-        	AssemblyGenerator codeAsm = new AssemblyGenerator();
-        	String path = "C:\\Users\\Matheus\\eclipse-workspace\\minijava-compiler\\SamplePrograms\\SampleMiniJavaPrograms\\BinarySearch.java";
             ComplexSymbolFactory sf = new ComplexSymbolFactory();
-            Reader in = new BufferedReader(new FileReader(path)); 
-            		
-            //new BufferedReader(new InputStreamReader(System.in));
+            Reader in = new BufferedReader(new InputStreamReader(System.in));
             scanner s = new scanner(in, sf);
             parser p = new parser(s, sf);
             Symbol root;
@@ -30,30 +24,7 @@ public class TestParser {
             root = p.parse();
             System.out.print("\nParsing completed"); 
             Program program = (Program)root.value;
-            
-            program.accept(globalTable);
-            
-            if(globalTable.getErrorList().isEmpty())
-            	System.out.println("\nTable build succesfully");
-            else
-            	System.out.println("\nErrors encountered on the construction os the table");
-            
-            semanticAnalaizer.setSymbolTable(globalTable.getTable());
-            semanticAnalaizer.setIdentifiersType(globalTable.getIdentifiersType());
-            program.accept(semanticAnalaizer);
-
-            if(semanticAnalaizer.getErrorList().isEmpty())
-            	System.out.println("Semantic analizes succesful");
-            else {
-            	System.out.println("Errors encountered on the semantic analize");
-            	for (String errors: semanticAnalaizer.getErrorList()) {
-            		System.out.println(errors);
-            	}
-            }
-            
-        	program.accept(codeAsm);
-        	
-        	System.out.println("Code Assembly Generated.");
+           
 ////            List<Statement> program = (List<Statement>)root.value;
 //            for (Statement statement: program) {
 //                statement.accept(new PrettyPrintVisitor());
