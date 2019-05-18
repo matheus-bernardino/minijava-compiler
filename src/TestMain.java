@@ -26,6 +26,7 @@ public class TestMain {
 	            scanner s = new scanner(in, sf);
 	            parser p = new parser(s, sf);
 	            Symbol root;
+	            
 		    // replace p.parse() with p.debug_parse() in next line to see trace of
 		    // parser shift/reduce actions during parse
 	            root = p.parse();

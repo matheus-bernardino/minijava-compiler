@@ -81,14 +81,12 @@ public class AssemblyGenerator implements Visitor {
 
 	@Override
 	public void visit(Program n) {
-		/* Escreve cabeçalho do código assembly */
+		/* Escreve cabeï¿½alho do cï¿½digo assembly */
 		codeAsm = "#Code Assembly Generated\n\n";
 		codeAsm = codeAsm + "\t.text\n";
 		codeAsm = codeAsm + "\t.global asm_main		#label for Main program\n\n";
 		codeAsm = codeAsm + "#Main function\n";
 		codeAsm = codeAsm + "asm_main:\n";
-		
-		/* Escrevendo o Prólogo */
 		codeAsm = codeAsm + "\tpushl	%ebp		# prologue - save frame ptr\n";
 		codeAsm = codeAsm + "\tmovl	%esp,%ebp		# no local vars - no additional stack\n\n";
 		
@@ -98,12 +96,10 @@ public class AssemblyGenerator implements Visitor {
 			n.cl.get(i).accept(this);
 		}
 		
-		/* Escrevendo o Epilogo */
 		codeAsm = codeAsm + "\n\tmovl	%ebp,%esp	# epilogue - return\n";
 		codeAsm = codeAsm + "\tpopl	%ebp\n";
 		codeAsm = codeAsm + "\tret\n";
 		
-		/* Escrevendo a String do código no arquivo .s */
 		try{
 			//System.out.println(codigoAsm);
 			generatingCodeFile(codeAsm);
@@ -124,17 +120,11 @@ public class AssemblyGenerator implements Visitor {
 			n.vl.get(i).accept(this);
 		String codeTimes = new String();
 		
-		/* Recebe o código .s referente a expressao 1(EXP1). Joga o resultado dessa
-		 * expressão no registrador EBX */
-//		String codeExp1 = (String)n.e1.accept(this);
 		codeTimes = codeTimes; //+ codeExp1;
 		codeTimes = codeTimes + "\tmov %eax, %ebx\n";
 		
-		/* Recebe o código .s referente a expressao 2(EXP2). */
-//		String codeExp2 = (String)n.e2.accept(this);
 		codeTimes = codeTimes; //+ codeExp2;
 		
-		/* Multiplica o conteudo do resgistrador ebx com o do eax e joga o resultado em eax  */
 		codeTimes = codeTimes + "\timul %ebx, %eax			# exp1 * exp2\n";
 		codeTimes = codeTimes + "\tpush %eax				# Put the result in the stack\n\n"; 
 	
@@ -256,17 +246,11 @@ public class AssemblyGenerator implements Visitor {
 	public void visit(Plus n) {
 		String codePlus = new String();
 		
-		/* Recebe o código .s referente a expressao 1(EXP1). Joga o resultado dessa
-		 * expressão no registrador EDX */
-//		String codeExp1 = (String)n.e1.accept(this);
 		codePlus = codePlus; //+ codeExp1;
 		codePlus = codePlus + "\tmov %eax, %edx\n";
 		
-		/* Recebe o código .s referente a expressao 2(EXP2) */
-//		String codeExp2 = (String)n.e2.accept(this);
 		codePlus = codePlus; //+ codeExp2;
 		
-		/* Soma o conteudo do resgistrador edx com o do eax e joga o resultado em eax  */
 		codePlus = codePlus + "\tadd %edx, %eax			# exp1 + exp2\n";
 		codePlus = codePlus + "\tpush %eax				# Put the result in the stack\n\n";
 	}
@@ -275,17 +259,11 @@ public class AssemblyGenerator implements Visitor {
 	public void visit(Minus n) {
 		String codeMinus = new String();
 		
-		/* Recebe o código .s referente a expressao 1(EXP1). Joga o resultado dessa
-		 * expressão no registrador ECX */
-//		String codeExp1 = (String)n.e1.accept(this);
 		codeMinus = codeMinus; //+ codeExp1;
 		codeMinus = codeMinus + "\tmov %eax, %ecx\n";
 		
-		/* Recebe o código .s referente a expressao 2(EXP2). */
-//		String codeExp2 = (String)n.e2.accept(this);
-		codeMinus = codeMinus; //+ codeExp2;
+		codeMinus = codeMinus; 
 		
-		/* Subtrai o conteudo do resgistrador ecx com o do eax e joga o resultado em ecx  */
 		codeMinus = codeMinus + "\tsub %eax, %ecx			# exp1 - exp2\n";
 		codeMinus = codeMinus + "\tmov %ecx, %eax			# Put the result of SUB in EAX\n";
 		codeMinus = codeMinus + "\tpush %ecx				# Put the result in the stack\n\n";
@@ -295,17 +273,11 @@ public class AssemblyGenerator implements Visitor {
 	public void visit(Times n) {
 		String codeTimes = new String();
 		
-		/* Recebe o código .s referente a expressao 1(EXP1). Joga o resultado dessa
-		 * expressão no registrador EBX */
-//		String codeExp1 = (String)n.e1.accept(this);
 		codeTimes = codeTimes; //+ codeExp1;
 		codeTimes = codeTimes + "\tmov %eax, %ebx\n";
 		
-		/* Recebe o código .s referente a expressao 2(EXP2). */
-//		String codeExp2 = (String)n.e2.accept(this);
-		codeTimes = codeTimes; //+ codeExp2;
+		codeTimes = codeTimes; 
 		
-		/* Multiplica o conteudo do resgistrador ebx com o do eax e joga o resultado em eax  */
 		codeTimes = codeTimes + "\timul %ebx, %eax			# exp1 * exp2\n";
 		codeTimes = codeTimes + "\tpush %eax				# Put the result in the stack\n\n"; 
 		

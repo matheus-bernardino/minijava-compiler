@@ -79,12 +79,6 @@ public class SemanticAnalyzer implements Visitor {
 	public void visit(Program n) {
 		currentClass = symbolTable.getClass(n.m.i1.s);
 		currentMethod = null;
-//		
-//		Set<String> keys = identifiersType.keySet();
-//        for(String key: keys){
-//            System.out.println("Value of "+key+" is: "+ identifiersType.get(key));
-//        }
-//		
 		n.m.s.accept(this);
 
 		for (int i = 0; i < n.cl.size(); i++) {
@@ -244,6 +238,7 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(Assign n) {
+		// TODO Auto-generated method stub
 		
 	}
 
@@ -278,7 +273,6 @@ public class SemanticAnalyzer implements Visitor {
 		Type type2 = analyzerType;
 		
 		if (!(type1 instanceof IntegerType && type2 instanceof IntegerType)) {
-//			System.out.println("Type 1 " + type1 + " Type 2 " + type2);
 			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
 					"The expressions in LessThan are not integers.");
 		}
@@ -295,7 +289,6 @@ public class SemanticAnalyzer implements Visitor {
 		Type type2 = analyzerType;
 		
 		if (!(type1 instanceof IntegerType && type2 instanceof IntegerType)) {
-//			System.out.println("Type 1 " + type1 + " Type 2 " + type2);
 			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
 					"The expressions in Plus are not integers.");
 		}
@@ -325,7 +318,6 @@ public class SemanticAnalyzer implements Visitor {
 		Type type2 = analyzerType;
 		
 		if (!(type1 instanceof IntegerType && type2 instanceof IntegerType)) {
-//			System.out.println("Type 1 " + type1 + " Type 2 " + type2);
 			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
 					"The expressions in Times are not integers.");
 		}
@@ -406,17 +398,14 @@ public class SemanticAnalyzer implements Visitor {
 
 	@Override
 	public void visit(Not n) {
-		
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void visit(Identifier n) {
-//		if (!this.getSymbolTable().checkVariable(currentClass, currentMethod, n.s)) {
-////			System.out.println(currentMethod.getName());
-//			errorList.add("In the line of number " + n.line_number + " this error occured: " + 
-//					   "The identifier " + n.s + " was not declared before.");
-//		}
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
