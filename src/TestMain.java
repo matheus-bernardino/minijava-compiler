@@ -23,7 +23,6 @@ public class TestMain {
 	            ComplexSymbolFactory sf = new ComplexSymbolFactory();
 	            Reader in = new BufferedReader(new FileReader(path)); 
 	            		
-	            //new BufferedReader(new InputStreamReader(System.in));
 	            scanner s = new scanner(in, sf);
 	            parser p = new parser(s, sf);
 	            Symbol root;

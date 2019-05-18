@@ -14,8 +14,9 @@ public class TestParser {
     public static void main(String [] args) {
     	try {
             // create a scanner on the input file
+    		String path = "/home/matheus/eclipse-workspace/minijava-compiler/SamplePrograms/SampleMiniJavaPrograms/BinarySearch.java";
             ComplexSymbolFactory sf = new ComplexSymbolFactory();
-            Reader in = new BufferedReader(new InputStreamReader(System.in));
+            Reader in = new BufferedReader(new FileReader(path)); 
             scanner s = new scanner(in, sf);
             parser p = new parser(s, sf);
             Symbol root;
